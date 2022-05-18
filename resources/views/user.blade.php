@@ -14,7 +14,7 @@
 <script>
     $.ajax({
         method: 'GET',
-        url: '{{route('api.auth.user')}}',
+        url: '{{route('api.profile')}}',
         dataType: 'json',
         headers: {
             'Authorization': 'Bearer ' + getCookie('token')

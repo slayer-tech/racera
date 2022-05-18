@@ -17,6 +17,7 @@ use \App\Http\Controllers\Api\AuthController;
 
 Route::group(['as' => 'api.'], function() {
     Route::group(['middleware' => 'auth:sanctum'], function() {
+        Route::get('/profile', [\App\Http\Controllers\Api\ProfileController::class, 'profile'])->name('profile');
         Route::post('/description/edit', [\App\Http\Controllers\Api\ProfileController::class, 'editDescription'])->name('description.edit');
     });
 

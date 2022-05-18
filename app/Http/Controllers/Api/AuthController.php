@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,11 @@ class AuthController extends Controller
                 'message' => 'Error! Try later'
             ], 500);
         }
+
+        Profile::create([
+            'name' => $request->login,
+            'user_id' => Auth::user()->id,
+        ]);
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;
 
