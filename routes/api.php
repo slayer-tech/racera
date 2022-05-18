@@ -15,11 +15,18 @@ use \App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::group(['as' => 'api.'], function() {
+    Route::group(['middleware' => 'auth:sanctum'], function() {
+        Route::post('/description/edit', [\App\Http\Controllers\Api\ProfileController::class, 'editDescription'])->name('description.edit');
+    });
 
-Route::group(['prefix' => 'auth'], function() {
-    Route::post('/signup', [AuthController::class, 'signup']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::group(['prefix' => 'auth', 'as' => 'auth.'], function() {
+        Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+        Route::group(['middleware' => 'auth:sanctum'], function() {
+            Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+            Route::get('user', [AuthController::class, 'user'])->name('user');
+        });
+    });
 });
