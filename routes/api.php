@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClanController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +16,27 @@ use \App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::group(['as' => 'api.'], function() {
-    Route::group(['middleware' => 'auth:sanctum'], function() {
-        Route::get('/profile', [\App\Http\Controllers\Api\ProfileController::class, 'profile'])->name('profile');
-        Route::post('/description/edit', [\App\Http\Controllers\Api\ProfileController::class, 'editDescription'])->name('description.edit');
+Route::group(['as' => 'api.'], function () {
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::group(['prefix' => 'profile','as' => 'profile.'], function () {
+            Route::get('/', [ProfileController::class, 'index'])->name('index');
+            Route::post('/edit', [ProfileController::class, 'update'])->name('update');
+        });
+
+        Route::group(['as' => 'clan.'], function () {
+            Route::get('/clans', [ClanController::class, 'index'])->name('index');
+            Route::group(['prefix' => 'clan'], function() {
+                Route::get('/{id}', [ClanController::class, 'show'])->name('show');
+                Route::patch('/{id}', [ClanController::class, 'update'])->name('update');
+            });
+        });
     });
 
-    Route::group(['prefix' => 'auth', 'as' => 'auth.'], function() {
+    Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
         Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-        Route::group(['middleware' => 'auth:sanctum'], function() {
+        Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('logout', [AuthController::class, 'logout'])->name('logout');
             Route::get('user', [AuthController::class, 'user'])->name('user');
         });

@@ -29,6 +29,10 @@ Route::get('/user', function () {
     return view('user');
 });
 
+Route::get('/clan/{id}', function (int $id) {
+    return view('clan', compact('id'));
+});
+
 Route::get('/logout', function () {
     return view('logout');
 });

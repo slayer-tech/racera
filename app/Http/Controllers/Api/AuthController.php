@@ -38,7 +38,6 @@ class AuthController extends Controller
 
         Profile::create([
             'name' => $request->login,
-            'user_id' => Auth::user()->id,
         ]);
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;

@@ -14,6 +14,16 @@ class Profile extends Model
         'description',
         'privilege',
         'avatar',
-        'user_id'
+        'clan_id'
     ];
+
+    public function user()
+    {
+        $this->hasOne(User::class, 'id');
+    }
+
+    public function clan()
+    {
+        $this->hasOne(Clan::class);
+    }
 }

@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function profile()
+    public function index()
     {
         return response()->json(Auth::user()->profile);
     }
 
-    public function editDescription(Request $request)
+    public function update(Request $request)
     {
-        User::find($request->user()->id)->update(['description' => $request->description]);
+        Profile::find($request->user()->id)->update($request->all());
 
         return response()->json([
-            'message' => 'Successfully edited description'
+            'message' => 'Successfully update user data'
         ]);
     }
 }
