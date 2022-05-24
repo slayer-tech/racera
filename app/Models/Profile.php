@@ -19,11 +19,17 @@ class Profile extends Model
 
     public function user()
     {
-        $this->hasOne(User::class, 'id');
+        return $$this->hasOne(User::class, 'id');
     }
 
     public function clan()
     {
-        $this->hasOne(Clan::class);
+        return $this->hasOne(Clan::class);
     }
+
+    public function cars()
+    {
+        return $this->belongsToMany(Car::class);
+    }
+
 }

@@ -20,7 +20,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 422);
+            return response()->json(['errors' => $validator->errors()->all()], 400);
         }
 
         User::create([
@@ -32,7 +32,9 @@ class AuthController extends Controller
 
         if(!Auth::attempt($request->all())) {
             return response()->json([
-                'message' => 'Error! Try later'
+                'errors' => [
+                    'Error! Try later'
+                ]
             ], 500);
         }
 
@@ -53,7 +55,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 422);
+            return response()->json(['errors' => $validator->errors()->all()], 400);
         }
 
         $login = $request->login;
@@ -65,7 +67,7 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'errors' => 'Incorrect password or email'
-            ], 422);
+            ], 400);
         }
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;

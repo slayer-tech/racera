@@ -37,7 +37,7 @@ class ClanController extends Controller
         ]);
 
         if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 422);
+            return response()->json(['errors' => $validator->errors()->all()], 400);
         }
 
         Clan::create([
@@ -86,7 +86,7 @@ class ClanController extends Controller
             unset($arr['avatar']);
 
         if ($validator->failed())
-            return response()->json(['errors' => $validator->errors()->all()], 422);
+            return response()->json(['errors' => $validator->errors()->all()], 400);
 
         $clan = Clan::find($id)->update($arr);
 

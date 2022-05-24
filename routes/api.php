@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClanController;
+use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,15 @@ Route::group(['as' => 'api.'], function () {
         Route::group(['prefix' => 'profile','as' => 'profile.'], function () {
             Route::get('/', [ProfileController::class, 'index'])->name('index');
             Route::post('/edit', [ProfileController::class, 'update'])->name('update');
+        });
+
+        Route::group(['as' => 'car.'], function () {
+            Route::get('/clans', [CarController::class, 'index'])->name('index');
+            Route::group(['prefix' => 'car'], function() {
+                Route::get('/{id}', [CarController::class, 'show'])->name('show');
+                Route::get('/buy/{id}', [CarController::class, 'buy'])->name('buy');
+                Route::get('/sell/{id}', [CarController::class, 'sell'])->name('sell');
+            });
         });
 
         Route::group(['as' => 'clan.'], function () {

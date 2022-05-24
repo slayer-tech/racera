@@ -29,7 +29,7 @@ class CarController extends Controller
         if ($validator->failed()) {
             return response()->json([
                 'errors' => $validator->errors()
-            ], 422);
+            ], 400);
         }
 
         Car::create([
