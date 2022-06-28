@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('clan_profile', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('privilege_id')->default(0);
-            $table->text('description')->nullable();
-            $table->string('avatar')->nullable();
-            $table->foreignId('clan_id')->nullable();
+            $table->foreignId('clan_id');
+            $table->foreignId('profile_id');
+            $table->boolean('is_creator');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('clan_profile');
     }
 };

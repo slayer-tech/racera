@@ -20,23 +20,57 @@ class CarController extends Controller
         return response()->json($cars);
     }
 
+    public function show(int $id)
+    {
+        $car = Car::find($id);
+
+        if (!$car) {
+            return response()->json([
+                'errors' => [
+                    "Car does not exist"
+                ]
+            ], 404);
+        }
+
+        return response()->json($car);
+    }
+
     /**
      * @param int $id
      * @return JsonResponse
      */
     public function buy(int $id)
     {
-        // ????
+        if (!Car::find($id)) {
+            return response()->json([
+                'errors' => [
+                    "Car does not exist"
+                ]
+            ], 404);
+        }
 
         $profile = Profile::find(Auth::user()->id);
 
-        if ($profile->cars->find($id)) {
+        $car = $profile->cars->find($id);
+
+        if ($car) {
             return response()->json([
                 'errors' => [
                     'The car is already bought'
                 ]
             ], 400);
         }
+
+        if ($profile->money < $car->price) {
+            return response()->json([
+                'errors' => [
+                    'Not enough money to buy the car'
+                ]
+            ]);
+        }
+
+        $profile->money -= $car->price;
+        $profile->save();
 
         $profile->cars()->attach($id);
 
@@ -46,20 +80,34 @@ class CarController extends Controller
     }
 
     /**
-     * @param int $id
+
+
      * @return JsonResponse
      */
     public function sell(int $id)
     {
+        if (!Car::find($id)) {
+            return response()->json([
+                'errors' => [
+                    "Car does not exist"
+                ]
+            ], 404);
+        }
+
         $profile = Profile::find(Auth::user()->id);
 
-        if (!$profile->cars->find($id)) {
+        $car = $profile->cars->find($id);
+
+        if (!$car) {
             return response()->json([
                 'errors' => [
                     'This car has not been bought'
                 ]
             ], 400);
         }
+
+        $profile->money += $car->price;
+        $profile->save();
 
         $profile->cars()->detach($id);
 

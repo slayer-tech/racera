@@ -14,7 +14,7 @@
 <script>
     $.ajax({
         method: 'GET',
-        url: '{{route('api.auth.logout')}}',
+        url: '{{ route('api.auth.logout') }}',
         dataType: 'json',
         headers: {
             'Authorization': 'Bearer ' + getCookie('token')

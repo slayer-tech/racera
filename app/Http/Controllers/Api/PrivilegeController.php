@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Upgrade;
+use App\Models\Privilege;
 use Illuminate\Http\Request;
 
-class UpgradeController extends Controller
+class PrivilegeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class UpgradeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Upgrade  $upgrade
+     * @param  \App\Models\Privilege  $privilege
      * @return \Illuminate\Http\Response
      */
-    public function show(Upgrade $upgrade)
+    public function show(Privilege $privilege)
     {
         //
     }
@@ -43,10 +43,10 @@ class UpgradeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Upgrade  $upgrade
+     * @param  \App\Models\Privilege  $privilege
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Upgrade $upgrade)
+    public function update(Request $request, Privilege $privilege)
     {
         //
     }
@@ -54,10 +54,10 @@ class UpgradeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Upgrade  $upgrade
+     * @param  \App\Models\Privilege  $privilege
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Upgrade $upgrade)
+    public function destroy(Privilege $privilege)
     {
         //
     }

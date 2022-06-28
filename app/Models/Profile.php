@@ -19,7 +19,7 @@ class Profile extends Model
 
     public function user()
     {
-        return $$this->hasOne(User::class, 'id');
+        return $this->hasOne(User::class, 'id');
     }
 
     public function clan()
@@ -32,4 +32,18 @@ class Profile extends Model
         return $this->belongsToMany(Car::class);
     }
 
+    public function upgrades()
+    {
+        return $this->belongsToMany(Upgrade::class);
+    }
+
+    public function privilege()
+    {
+        return $this->hasOne(Privilege::class);
+    }
+
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class);
+    }
 }

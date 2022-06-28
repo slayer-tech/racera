@@ -29,6 +29,14 @@ Route::get('/user', function () {
     return view('user');
 });
 
+Route::get('/chats', function () {
+    return view('chats');
+});
+
+Route::get('/chat/{id}', function ($id) {
+    return view('chat', ['id' => $id]);
+});
+
 Route::get('/clan/{id}', function (int $id) {
     return view('clan', compact('id'));
 });

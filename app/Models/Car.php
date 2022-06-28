@@ -13,4 +13,9 @@ class Car extends Model
     {
         return $this->belongsToMany(Profile::class);
     }
+
+    public function bonuses()
+    {
+        return $this->belongsToMany(Bonus::class);
+    }
 }

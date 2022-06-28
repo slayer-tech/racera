@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Upgrade extends Model
+class Chat extends Model
 {
     use HasFactory;
 
-    public function bonuses()
+    public $timestamps = false;
+
+    public function messages()
     {
-        return $this->belongsToMany(Bonus::class);
+        return $this->hasMany(Message::class);
     }
 
     public function profiles()

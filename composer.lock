@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a660aaf1c76fefdae9744dc84fd5f6bb",
+    "content-hash": "b7b6f450fffc1f4f574d30317ff7ad5c",
     "packages": [
         {
             "name": "brick/math",
@@ -2837,6 +2837,64 @@
                 }
             ],
             "time": "2022-02-02T18:37:57+00:00"
+        },
+        {
+            "name": "orchid/socket",
+            "version": "1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchidsoftware/web-socket.git",
+                "reference": "2bb5793ba4992b62fc3b790b6051d97c917f122b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchidsoftware/web-socket/zipball/2bb5793ba4992b62fc3b790b6051d97c917f122b",
+                "reference": "2bb5793ba4992b62fc3b790b6051d97c917f122b",
+                "shasum": ""
+            },
+            "require": {
+                "cboden/ratchet": "^0.4",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Orchid\\Socket\\Providers\\SocketServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Orchid\\Socket\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "tabuna",
+                    "email": "bliz48rus@gmail.com"
+                }
+            ],
+            "description": "Laravel library for asynchronously serving WebSockets. ",
+            "keywords": [
+                "Socket",
+                "framework",
+                "laravel",
+                "php",
+                "server",
+                "web",
+                "websocket"
+            ],
+            "support": {
+                "issues": "https://github.com/orchidsoftware/web-socket/issues",
+                "source": "https://github.com/orchidsoftware/web-socket/tree/1.6"
+            },
+            "abandoned": true,
+            "time": "2017-10-17T22:38:24+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",

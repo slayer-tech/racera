@@ -13,4 +13,9 @@ class Bonus extends Model
     {
         return $this->belongsToMany(Upgrade::class);
     }
+
+    public function cars()
+    {
+        return $this->belongsToMany(Car::class);
+    }
 }
