@@ -37,13 +37,12 @@ class Profile extends Model
         return $this->belongsToMany(Upgrade::class);
     }
 
-    public function privilege()
-    {
-        return $this->hasOne(Privilege::class);
-    }
-
     public function chats()
     {
         return $this->belongsToMany(Chat::class);
+    }
+
+    public function privilege() {
+        return $this->belongsTo(Privilege::class);
     }
 }

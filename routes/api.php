@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ClanController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\PrivilegeController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UpgradeController;
 use Illuminate\Support\Facades\Route;
@@ -24,23 +25,31 @@ Route::group(['as' => 'api.'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
             Route::get('/', [ProfileController::class, 'index'])->name('index');
-            Route::post('/edit', [ProfileController::class, 'update'])->name('update');
+            Route::put('/edit', [ProfileController::class, 'update'])->name('update');
         });
 
         Route::group(['as' => 'car.'], function () {
             Route::get('/cars', [CarController::class, 'index'])->name('index');
             Route::group(['prefix' => 'car'], function () {
                 Route::get('/{id}', [CarController::class, 'show'])->name('show');
-                Route::get('/buy/{id}', [CarController::class, 'buy'])->name('buy');
-                Route::get('/sell/{id}', [CarController::class, 'sell'])->name('sell');
+                Route::post('/{id}', [CarController::class, 'buy'])->name('buy');
+                Route::delete('/{id}', [CarController::class, 'sell'])->name('sell');
             });
         });
 
         Route::group(['as' => 'upgrades.'], function () {
             Route::get('/upgrades', [UpgradeController::class, 'index'])->name('index');
             Route::group(['prefix' => 'car'], function () {
-                Route::get('/buy/{id}', [UpgradeController::class, 'buy'])->name('buy');
-                Route::get('/sell/{id}', [UpgradeController::class, 'sell'])->name('sell');
+                Route::post('/{id}', [UpgradeController::class, 'buy'])->name('buy');
+                Route::delete('/{id}', [UpgradeController::class, 'sell'])->name('sell');
+            });
+        });
+
+        Route::group(['as' => 'privilege'], function () {
+            Route::get('/privileges', [PrivilegeController::class, 'index'])->name('index');
+            Route::group(['prefix' => 'privilege'], function () {
+                Route::get('/{id}', [PrivilegeController::class, 'show'])->name('show');
+                Route::post('/{id}', [PrivilegeController::class, 'buy'])->name('buy');
             });
         });
 
