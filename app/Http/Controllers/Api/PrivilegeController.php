@@ -70,9 +70,7 @@ class PrivilegeController extends Controller
             ]);
 
         return response()->json([
-            'messages' => [
-                'Successfully bought privilege'
-            ],
+            'message' => 'Successfully bought privilege',
         ]);
     }
 }

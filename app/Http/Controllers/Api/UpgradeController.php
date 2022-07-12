@@ -73,7 +73,7 @@ class UpgradeController extends Controller
         $profile->money += $car->price;
         $profile->save();
 
-        $this->profile->cars()->detach($id);
+        $profile->cars()->detach($id);
 
         return response()->json([
             'message' => 'The upgrade was successfully sold'
