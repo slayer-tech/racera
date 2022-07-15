@@ -154,6 +154,14 @@
         [wall_left, wall_center],
         [wall_center, wall_right]
     ]
+    const variations_for_socket = [
+        [0],
+        [1],
+        [2],
+        [0, 2],
+        [0, 1],
+        [1, 2]
+    ]
 
     let left_indent = 25
 
@@ -216,10 +224,11 @@
 
     function generator() {
         const variation_index = Math.floor(Math.random() * variations.length)
-        const variation = variations[variation_index]
-        console.log(variation)
+        let variation = variations[variation_index]
+        let variation_for_socket = variations_for_socket[variation_index]
+
         socket.send(JSON.stringify({
-            "variation": JSON.stringify(variation)
+            "variation": JSON.stringify(variation_for_socket)
         }))
 
         variation.forEach(wall => {
@@ -234,7 +243,7 @@
 
             setTimeout(() => {
                 game.removeChild(wall_clone)
-            }, 2050)
+            }, 3050)
         })
     }
 
@@ -249,7 +258,6 @@
     function checkPlayerInWall() {
         let player_coordinates = main_player.getBoundingClientRect()
 
-
         document.querySelectorAll('.wall').forEach(wall => {
             let wall_coordinates = wall.getBoundingClientRect()
 
@@ -261,7 +269,7 @@
             {
                 game.removeChild(main_player)
 
-                modal_window_lose = document.querySelector(".modal-window_lose")
+                let modal_window_lose = document.querySelector(".modal-window_lose")
                 modal_window_lose.style.display = 'block'
 
                 clearInterval(check_player_in_wall_interval_id)
