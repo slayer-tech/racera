@@ -90,6 +90,18 @@
         left: 5%;
     }
 
+    .wall_center.wall_opponent {
+        left: 75%
+    }
+
+    .wall_right.wall_opponent {
+        left: 95%
+    }
+
+    .wall_left.wall_opponent {
+        left: 55%
+    }
+
     .modal-window {
         font-family: sans-serif;
         position: fixed;
@@ -146,33 +158,45 @@
     const wall_center = document.querySelector('.wall_center')
     const wall_right = document.querySelector('.wall_right')
     const wall_left = document.querySelector('.wall_left')
-    const variations = [
+    const wall_variations = [
         [wall_left],
         [wall_center],
         [wall_right],
-        [wall_left, wall_right],
         [wall_left, wall_center],
+        [wall_left, wall_right],
         [wall_center, wall_right]
-    ]
-    const variations_for_socket = [
-        [0],
-        [1],
-        [2],
-        [0, 2],
-        [0, 1],
-        [1, 2]
     ]
 
     let left_indent = 25
 
     let interval = 2000
 
-    let generator_interval_id
+    let generator_interval_id = -1
 
     let change_interval_id = setInterval(changeInterval, 8000)
     let check_player_in_wall_interval_id = setInterval(checkPlayerInWall, 50)
 
-    addEventListener("keydown", keyListener)
+    socket.onmessage = e => {
+        let data = JSON.parse(e.data)
+        let opponent_left_indent = data['left_indent']
+        let opponent_wall_variation_index = data['variation_index']
+        let game_over = data['game_over']
+
+        if (opponent_left_indent) {
+            opponent_player.style.left = opponent_left_indent + 50 + '%'
+        }
+
+        if (opponent_wall_variation_index !== undefined) {
+            let wall_variation = wall_variations[opponent_wall_variation_index]
+            renderWalls(wall_variation, true)
+        }
+
+        if (game_over) {
+            endGame('win')
+        }
+    }
+
+    addEventListener('keydown', keyListener)
 
     function keyListener(e) {
         switch (e.key) {
@@ -208,43 +232,22 @@
 
     function changePosition(main_player, left_indent) {
         socket.send(JSON.stringify({
-            "left_indent": left_indent
+            'left_indent': left_indent
         }))
 
-        main_player.style.left = left_indent + "%"
-    }
-
-    socket.onmessage = e => {
-        let data = JSON.parse(e.data)
-        let left_indent = data["left_indent"]
-
-        opponent_player.style.left = left_indent + 50 + "%"
+        main_player.style.left = left_indent + '%'
     }
 
 
     function generator() {
-        const variation_index = Math.floor(Math.random() * variations.length)
-        let variation = variations[variation_index]
-        let variation_for_socket = variations_for_socket[variation_index]
+        const variation_index = Math.floor(Math.random() * wall_variations.length)
+        let wall_variation = wall_variations[variation_index]
 
         socket.send(JSON.stringify({
-            "variation": JSON.stringify(variation_for_socket)
+            'variation_index': variation_index
         }))
 
-        variation.forEach(wall => {
-            const wall_clone = wall.cloneNode(false)
-            game.appendChild(wall_clone)
-
-            wall_clone.style.top = "-50px"
-
-            setTimeout(() => {
-                wall_clone.style.top = "calc(100vh + 50px)"
-            }, 50)
-
-            setTimeout(() => {
-                game.removeChild(wall_clone)
-            }, 3050)
-        })
+        renderWalls(wall_variation)
     }
 
     function changeInterval() {
@@ -267,22 +270,52 @@
                 && wall_coordinates.left < player_coordinates.left + player_coordinates.width
             )
             {
-                game.removeChild(main_player)
-
-                let modal_window_lose = document.querySelector(".modal-window_lose")
-                modal_window_lose.style.display = 'block'
-
-                clearInterval(check_player_in_wall_interval_id)
-                clearInterval(change_interval_id)
-                clearInterval(generator_interval_id)
-                removeEventListener('keydown', keyListener)
-
-                socket.send(JSON.stringify({
-                    "game_over": true
-                }))
+                endGame('lose')
 
                 return
             }
+        })
+    }
+
+    function endGame(modal_window_class) {
+        game.removeChild(opponent_player)
+        game.removeChild(main_player)
+
+        let modal_window = document.querySelector('.modal-window_' + modal_window_class)
+
+        modal_window.style.display = 'block'
+
+        clearInterval(check_player_in_wall_interval_id)
+        clearInterval(change_interval_id)
+        clearInterval(generator_interval_id)
+        removeEventListener('keydown', keyListener)
+
+        socket.send(JSON.stringify({
+            'game_over': true
+        }))
+    }
+
+    function renderWalls(wall_variation, isOpponent = false) {
+        let timeout = 20
+
+        wall_variation.forEach(wall => {
+            const wall_clone = wall.cloneNode(false)
+            game.appendChild(wall_clone)
+
+            wall_clone.style.top = '-50px'
+
+            if (isOpponent) {
+                timeout = 0
+                wall_clone.classList.add('wall_opponent')
+            }
+
+            setTimeout(() => {
+                wall_clone.style.top = 'calc(100vh + 50px)'
+            }, 50 + timeout)
+
+            setTimeout(() => {
+                game.removeChild(wall_clone)
+            }, 3050)
         })
     }
 </script>
