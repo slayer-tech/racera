@@ -2,20 +2,20 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Sockets\ChatSocket;
+use App\Http\Sockets\GameSocket;
 use Illuminate\Console\Command;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 
-class ChatServer extends Command
+class GameServer extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'chat_server:serve';
+    protected $signature = 'game_server:serve';
 
     /**
      * The console command description.
@@ -36,7 +36,7 @@ class ChatServer extends Command
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
-                    new ChatSocket()
+                    new GameSocket()
                 )
             ),
             8080

@@ -1,23 +1,39 @@
 <?php
 
-namespace App\Socket;
+namespace App\Http\Sockets;
 
-use App\Socket\Base\BaseSocket;
+use Orchid\Socket\BaseSocketListener;
 use Ratchet\ConnectionInterface;
 use function MongoDB\BSON\fromJSON;
 
-class ChatSocket extends BaseSocket
+class ChatSocket extends BaseSocketListener
 {
+    /**
+     * Current clients.
+     *
+     * @var \SplObjectStorage
+     */
     protected $clients;
 
+    /**
+     * Current chats.
+     *
+     * @var array
+     */
     protected $chats;
 
+    /**
+     * ChatSocket constructor.
+     */
     public function __construct()
     {
         $this->clients = new \SplObjectStorage;
         $this->chats = [];
     }
 
+    /**
+     * @param ConnectionInterface $conn
+     */
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients->attach($conn);
@@ -26,6 +42,10 @@ class ChatSocket extends BaseSocket
 
     }
 
+    /**
+     * @param ConnectionInterface $from
+     * @param $msg
+     */
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg);
@@ -43,6 +63,9 @@ class ChatSocket extends BaseSocket
         }
     }
 
+    /**
+     * @param ConnectionInterface $conn
+     */
     public function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
@@ -50,6 +73,10 @@ class ChatSocket extends BaseSocket
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
+    /**
+     * @param ConnectionInterface $conn
+     * @param \Exception          $e
+     */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         echo "An error has occurred: {$e->getMessage()}\n";
