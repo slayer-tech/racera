@@ -12,13 +12,24 @@ class ProfileController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-        $user->profile;
-        $user->cars;
+        $limit = $request->limit;
+        $offset = ($request->page - 1) * $limit;
 
-        return response()->json($user);
+        $profiles = Profile::offset($offset)->limit($limit)->get();
+
+        return response()->json($profiles);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(int $id)
+    {
+        $profile = Profile::find($id);
+
+        return response()->json($profile);
     }
 
     /**
@@ -36,10 +47,22 @@ class ProfileController extends Controller
 
     /**
      * @param string $name
-     * @return int
+     * @return \Illuminate\Http\JsonResponse
      */
     public function find(string $name)
     {
-        return 123;
+        $profiles = Profile::where('name', 'LIKE', '%' . $name . '%')->get();
+        $result = [];
+
+        foreach ($profiles as $profile) {
+            $result[$profile->id]['id'] = $profile->id;
+            $result[$profile->id]['name'] = $profile->name;
+            $result[$profile->id]['description'] = $profile->description;
+            $result[$profile->id]['avatar'] = $profile->avatar;
+            $result[$profile->id]['clan_id'] = $profile->clan_id;
+            $result[$profile->id]['created_at'] = $profile->created_at;
+        }
+
+        return response()->json($result);
     }
 }

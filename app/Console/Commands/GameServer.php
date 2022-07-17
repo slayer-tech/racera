@@ -39,7 +39,7 @@ class GameServer extends Command
                     new GameSocket()
                 )
             ),
-            8080
+            8079
         );
 
         $server->run();

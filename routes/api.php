@@ -23,8 +23,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['as' => 'api.'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('/profiles', [ProfileController::class, 'index'])->name('index');
         Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
-            Route::get('/', [ProfileController::class, 'index'])->name('index');
+            Route::get('/{id}', [ProfileController::class, 'show'])->name('show');
+            Route::get('/find/{name}', [ProfileController::class, 'find'])->name('find');
             Route::put('/edit', [ProfileController::class, 'update'])->name('update');
         });
 

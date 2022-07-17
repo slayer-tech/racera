@@ -38,5 +38,11 @@ class MessageController extends Controller
                 return response()->json($message);
             }
         }
+
+        return response()->json([
+            'errors' => [
+                'Chat does not exist'
+            ]
+        ], 404);
     }
 }

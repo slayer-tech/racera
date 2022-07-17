@@ -44,7 +44,8 @@ class ChatController extends Controller
     {
         $user_id = Auth::user()->id;
 
-        $profile = Profile::find($recipient_id);
+        $profile = Profile::find($user_id);
+        $recipient_profile = Profile::find($recipient_id);
 
         if (!isset($profile)) {
              return response()->json([
@@ -54,7 +55,7 @@ class ChatController extends Controller
             ], 404);
         }
 
-        $chats = $profile->chats;
+        $chats = $profile->chats();
 
         foreach ($chats as $chat) {
             $profiles = $chat->profiles;
@@ -63,9 +64,9 @@ class ChatController extends Controller
                 || $profiles[0]->id == $user_id && $profiles[1]->id == $recipient_id) {
                 return response()->json([
                     'recipient' => [
-                        'id' => $profile->id,
-                        'name' => $profile->name,
-                        'avatar' => $profile->avatar
+                        'id' => $recipient_profile->id,
+                        'name' => $recipient_profile->name,
+                        'avatar' => $recipient_profile->avatar
                     ],
                     'messages' => $chat->messages
                 ]);
@@ -74,14 +75,14 @@ class ChatController extends Controller
 
         return response()->json([
             'recipient' => [
-                'id' => $profile->id,
-                'name' => $profile->name,
-                'avatar' => $profile->avatar
+                'id' => $recipient_profile->id,
+                'name' => $recipient_profile->name,
+                'avatar' => $recipient_profile->avatar
             ]
         ]);
     }
 
-    public function store($recipient_id) {
+    public function store(Request $request, $recipient_id) {
         $user_id = Auth::user()->id;
 
         if ($this->isExists($user_id, $recipient_id)) {
@@ -96,7 +97,8 @@ class ChatController extends Controller
 
     private function isExists($user_id, $recipient_id)
     {
-        $profile = Profile::find($recipient_id);
+        $profile = Profile::find($user_id);
+        $recipient_profile = Profile::find($recipient_id);
         $chats = $profile->chats;
 
         foreach ($chats as $chat) {

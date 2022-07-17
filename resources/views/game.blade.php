@@ -182,7 +182,7 @@
         let opponent_wall_variation_index = data['variation_index']
         let game_over = data['game_over']
 
-        if (opponent_left_indent) {
+        if (opponent_left_indent !== undefined) {
             opponent_player.style.left = opponent_left_indent + 50 + '%'
         }
 
@@ -191,7 +191,7 @@
             renderWalls(wall_variation, true)
         }
 
-        if (game_over) {
+        if (game_over !== undefined) {
             endGame('win')
         }
     }
