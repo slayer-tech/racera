@@ -23,11 +23,10 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()->all()], 400);
         }
 
-        User::create([
+        $user = User::create([
             'login' => $request->login,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'nick' => $request->login
         ]);
 
         if(!Auth::attempt($request->all())) {
@@ -39,7 +38,8 @@ class AuthController extends Controller
         }
 
         Profile::create([
-            'name' => $request->login,
+            'id' => $user->id,
+            'name' => $user->login,
         ]);
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;

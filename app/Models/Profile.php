@@ -14,7 +14,9 @@ class Profile extends Model
         'description',
         'privilege',
         'avatar',
-        'clan_id'
+        'clan_id',
+        'money',
+        'fuel'
     ];
 
     public function user()
