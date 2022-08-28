@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clan;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,7 @@ class ClanController extends Controller
      */
     public function index()
     {
-        $clans = Clan::all();
+        $clans = Clan::paginate();
 
         return response()->json($clans);
     }
@@ -30,25 +31,32 @@ class ClanController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|unique:clans',
-            'description' => 'string',
-            'avatar' => 'string'
+        $profile = Profile::find(Auth::user()->id);
+
+        $request->validate([
+            'name' => 'required|string|unique:clans,name',
+            'description' => 'required|string',
+            'avatar' => 'required|string'
         ]);
 
-        if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 400);
+        if ($profile->clan_id) {
+            return response()->json([
+                'You are already in a clan'
+            ]);
         }
 
-        Clan::create([
+        $clan = Clan::create([
             'name' => $request->name,
             'description' => $request->description,
-            'avatar' => $request->avatar
+            'avatar' => $request->avatar,
+            'creator_id' => $profile->id
         ]);
 
-        return response()->json([
-            'message' => 'Successfully created clan'
+        $profile->update([
+            'clan_id' => $clan->id
         ]);
+
+        return response()->json($clan, 201);
     }
 
     /**
@@ -72,7 +80,7 @@ class ClanController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -80,16 +88,26 @@ class ClanController extends Controller
             'avatar' => 'string'
         ]);
 
-        $arr = $request->all();
+        $data = $request->only(['name', 'description', 'avatar']);
 
-        if ($arr['avatar'] === null)
-            unset($arr['avatar']);
+        foreach ($data as $key => $value) {
+            if ($value === null)
+                unset($data[$key]);
+        }
 
         if ($validator->failed())
             return response()->json(['errors' => $validator->errors()->all()], 400);
 
-        $clan = Clan::find($id)->update($arr);
+        $clan = Clan::find($id);
+        $clan->update($data);
 
         return response()->json($clan);
+    }
+
+    public function search(string $name)
+    {
+        $clans = Clan::where('name', 'LIKE', '%' . $name . '%')->get();
+
+        return response()->json($clans);
     }
 }

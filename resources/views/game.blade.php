@@ -158,14 +158,6 @@
     const wall_center = document.querySelector('.wall_center')
     const wall_right = document.querySelector('.wall_right')
     const wall_left = document.querySelector('.wall_left')
-    const wall_variations = [
-        [wall_left],
-        [wall_center],
-        [wall_right],
-        [wall_left, wall_center],
-        [wall_left, wall_right],
-        [wall_center, wall_right]
-    ]
 
     let left_indent = 25
 
@@ -236,18 +228,6 @@
         }))
 
         main_player.style.left = left_indent + '%'
-    }
-
-
-    function generator() {
-        const variation_index = Math.floor(Math.random() * wall_variations.length)
-        let wall_variation = wall_variations[variation_index]
-
-        socket.send(JSON.stringify({
-            'variation_index': variation_index
-        }))
-
-        renderWalls(wall_variation)
     }
 
     function changeInterval() {

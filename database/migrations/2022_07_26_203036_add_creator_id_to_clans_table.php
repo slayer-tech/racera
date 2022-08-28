@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('clan_profile', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('clan_id');
-            $table->foreignId('profile_id');
-            $table->boolean('is_creator');
-            $table->timestamps();
+        Schema::table('clans', function (Blueprint $table) {
+            $table->foreignId('creator_id')->after('avatar')->constrained('profiles');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clan_profile');
+        Schema::table('clans', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('creator_id');
+        });
     }
 };

@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ClanSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +15,9 @@ class ClanSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Category::insert([
+            ['name' => 'money'],
+            ['name' => 'fuel']
+        ]);
     }
 }

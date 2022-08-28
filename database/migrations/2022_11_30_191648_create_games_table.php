@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bonus_upgrade', function (Blueprint $table) {
+        Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bonus_id');
-            $table->foreignId('upgrade_id');
+            $table->string('secret_token');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bonus_upgrade');
+        Schema::dropIfExists('games');
     }
 };

@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Privilege extends Model
+class Game extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    protected $fillable = ['secret_token'];
 
-    public function profiles()
-    {
-        return $this->hasMany(Profile::class);
+    public function profiles() {
+        return $this->belongsTo(Profile::class);
     }
 }

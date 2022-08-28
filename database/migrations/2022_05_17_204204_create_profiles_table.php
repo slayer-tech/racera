@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('avatar')->nullable();
             $table->foreignId('clan_id')->nullable();
+            $table->foreignId('games')->nullable();
             $table->timestamps();
         });
     }

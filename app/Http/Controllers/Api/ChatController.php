@@ -23,82 +23,71 @@ class ChatController extends Controller
             $first_profile = $profiles[0];
             $second_profile = $profiles[1];
 
-            if ($first_profile->id == $user_id) {
-                $profile = $second_profile;
-            } else {
-                $profile = $first_profile;
-            }
+            $profile = ($first_profile->id == $user_id) ? $second_profile : $first_profile;
 
             $result["$profile->id"] = [
                 "id" => $profile->id,
                 "name" => $profile->name,
-                "avatar" => $profile->avatar,
-                "chat_id" => $profile->pivot->chat_id,
+                "avatar" => $profile->avatar
             ];
         }
 
-        return response()->json($result);
+        return response()->json([
+            "data" => $result
+        ]);
     }
 
     public function show($recipient_id)
     {
         $user_id = Auth::user()->id;
 
-        $profile = Profile::find($user_id);
-        $recipient_profile = Profile::find($recipient_id);
+        $profile = Profile::findOrFail($user_id);
+        $recipient_profile = Profile::findOrFail($recipient_id);
 
-        if (!isset($profile)) {
-             return response()->json([
-                 'errors' => [
-                     "User does not exist"
-                 ]
-            ], 404);
-        }
+        $chat = $this->getChat($user_id, $recipient_id);
 
-        $chats = $profile->chats();
-
-        foreach ($chats as $chat) {
-            $profiles = $chat->profiles;
-
-            if ($profiles[0]->id == $recipient_id && $profiles[1]->id == $user_id
-                || $profiles[0]->id == $user_id && $profiles[1]->id == $recipient_id) {
-                return response()->json([
+        if ($chat) {
+            return response()->json([
+                'data' => [
                     'recipient' => [
                         'id' => $recipient_profile->id,
                         'name' => $recipient_profile->name,
                         'avatar' => $recipient_profile->avatar
                     ],
                     'messages' => $chat->messages
-                ]);
-            }
+                ]
+            ]);
         }
 
         return response()->json([
-            'recipient' => [
-                'id' => $recipient_profile->id,
-                'name' => $recipient_profile->name,
-                'avatar' => $recipient_profile->avatar
+            'data' => [
+                'recipient' => [
+                    'id' => $recipient_profile->id,
+                    'name' => $recipient_profile->name,
+                    'avatar' => $recipient_profile->avatar
+                ]
             ]
         ]);
     }
 
-    public function store(Request $request, $recipient_id) {
+    public function store(Request $request) {
         $user_id = Auth::user()->id;
+        $recipient_id = $request->recipient_id;
 
-        if ($this->isExists($user_id, $recipient_id)) {
+        $chat = $this->getChat($user_id, $recipient_id);
+
+        if ($chat) {
             return;
         }
 
         $chat = Chat::create();
         $chat->profiles()->attach($user_id);
-        if ($user_id != $recipient_id)
-            $chat->profiles()->attach($recipient_id);
+        $chat->profiles()->attach($recipient_id);
     }
 
-    private function isExists($user_id, $recipient_id)
+    private function getChat($user_id, $recipient_id)
     {
         $profile = Profile::find($user_id);
-        $recipient_profile = Profile::find($recipient_id);
         $chats = $profile->chats;
 
         foreach ($chats as $chat) {
@@ -106,7 +95,7 @@ class ChatController extends Controller
 
             if ($profiles[0]->id == $recipient_id && $profiles[1]->id == $user_id
                 || $profiles[0]->id == $user_id && $profiles[1]->id == $recipient_id) {
-                return true;
+                return $chat;
             }
         }
 

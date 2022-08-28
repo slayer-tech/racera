@@ -71,7 +71,7 @@
 
 
     $.ajax({
-        url: '{{ route('api.chat.show', ['id' => $id]) }}',
+        url: '{{ route('api.chats.show', ['id' => $id]) }}',
         method: 'get',
         dataType: 'json',
         headers: {

@@ -17,13 +17,14 @@ class MessageController extends Controller
         $recipient_id = $request->recipient_id;
 
         $chatcontroller = new ChatController();
-        $chatcontroller->store($recipient_id);
+        $chatcontroller->store($request);
 
         $profile = Profile::find($recipient_id);
         $chats = $profile->chats;
 
         foreach ($chats as $chat) {
             $profiles = $chat->profiles;
+
             $first_profile_id = $profiles[0]->id;
             $second_profile_id = $profiles[1]->id;
 
@@ -35,7 +36,7 @@ class MessageController extends Controller
                     'content' => $request->input("content")
                 ]);
 
-                return response()->json($message);
+                return response()->json($message, 201);
             }
         }
 

@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bonus_car', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('bonus_id');
-            $table->foreignId('car_id');
+        Schema::create('game_profile', function (Blueprint $table) {
+            $table->foreignId('game_id');
+            $table->foreignId('profile_id');
+            $table->boolean('winner')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bonus_car');
+        Schema::dropIfExists('game_profile');
     }
 };

@@ -17,7 +17,7 @@
 
     <script>
             $.ajax({
-                url: '{{ route('api.chat.index') }}',
+                url: '{{ route('api.chats.index') }}',
                 method: 'get',
                 dataType: 'json',
                 headers: {

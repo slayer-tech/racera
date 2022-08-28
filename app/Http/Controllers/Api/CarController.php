@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\Profile;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CarController extends Controller
@@ -13,9 +14,9 @@ class CarController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::all();
+        $cars = Car::paginate();
 
         return response()->json($cars);
     }
@@ -41,7 +42,9 @@ class CarController extends Controller
      */
     public function buy(int $id)
     {
-        if (!Car::find($id)) {
+        $car = Car::find($id);
+
+        if (!$car) {
             return response()->json([
                 'errors' => [
                     "Car does not exist"
@@ -51,9 +54,9 @@ class CarController extends Controller
 
         $profile = Profile::find(Auth::user()->id);
 
-        $car = $profile->cars->find($id);
+        $is_car_in_profile = !!$profile->cars->find($id);
 
-        if ($car) {
+        if ($is_car_in_profile) {
             return response()->json([
                 'errors' => [
                     'The car is already bought'
@@ -76,12 +79,10 @@ class CarController extends Controller
 
         return response()->json([
             'message' => 'The car was successfully bought'
-        ]);
+        ], 201);
     }
 
     /**
-
-
      * @return JsonResponse
      */
     public function sell(int $id)
@@ -111,8 +112,6 @@ class CarController extends Controller
 
         $profile->cars()->detach($id);
 
-        return response()->json([
-            'message' => 'The car was successfully sold'
-        ]);
+        return response()->json(null, 204);
     }
 }

@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Clan>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Profile>
  */
-class ClanFactory extends Factory
+class ProfileFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,9 +18,9 @@ class ClanFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'privilege_id' => 1,
             'description' => $this->faker->text(),
-            'avatar' => $this->faker->image(),
-            'creator_id' => User::latest()->first()->id
+            'avatar' => $this->faker->imageUrl()
         ];
     }
 }

@@ -13,7 +13,7 @@
 <script>
     $.ajax({
         method: 'GET',
-        url: '{{route('api.clan.show', ['id' => $id])}}',
+        url: '{{route('api.clans.show', ['id' => $id])}}',
         dataType: 'json',
         headers: {
             'Authorization': 'Bearer ' + getCookie('token')

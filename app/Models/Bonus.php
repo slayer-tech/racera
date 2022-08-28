@@ -9,9 +9,11 @@ class Bonus extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function upgrades()
     {
-        return $this->belongsToMany(Upgrade::class);
+        return $this->hasMany(Upgrade::class);
     }
 
     public function cars()

@@ -9,6 +9,13 @@ class Clan extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'avatar',
+        'description',
+        'creator_id'
+    ];
+
     public function profiles()
     {
         return $this->hasMany(Profile::class);

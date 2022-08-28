@@ -14,10 +14,7 @@ class ProfileController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = $request->limit;
-        $offset = ($request->page - 1) * $limit;
-
-        $profiles = Profile::offset($offset)->limit($limit)->get();
+        $profiles = Profile::paginate();
 
         return response()->json($profiles);
     }
@@ -38,10 +35,12 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        Profile::find($request->user()->id)->update($request->all());
+        $profile = Profile::find(Auth::user()->id);
+
+        $profile->update($request->only(['name', 'description', 'avatar']));
 
         return response()->json([
-            'message' => 'Successfully update user data'
+            'message' => 'Successfully updated user data'
         ]);
     }
 
@@ -49,7 +48,7 @@ class ProfileController extends Controller
      * @param string $name
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(string $name)
+    public function search(string $name)
     {
         $profiles = Profile::where('name', 'LIKE', '%' . $name . '%')->get();
         $result = [];

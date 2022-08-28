@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('car_id');
             $table->foreignId('profile_id');
-            $table->timestamps();
         });
     }
 

@@ -26,7 +26,8 @@
             dataType: 'json',
             data: $(this).serialize(),
             success: function (data) {
-                document.cookie = "token=" + data + "; path=/; max-age=" + 60*60*24*30
+                document.cookie = "token=" + data.token + "; path=/; max-age=" + 60*60*24*30
+                console.log(data.token)
             }
         })
     })

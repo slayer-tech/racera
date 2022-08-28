@@ -17,13 +17,6 @@ class UpgradeController extends Controller
         return response()->json($upgrades);
     }
 
-    public function show(int $id)
-    {
-        $upgrade = Upgrade::find($id);
-
-        return response()->json($upgrade);
-    }
-
     public function buy(int $id)
     {
         $profile = Profile::find(Auth::user()->id);
@@ -49,11 +42,11 @@ class UpgradeController extends Controller
         $profile->money -= $upgrade->price;
         $profile->save();
 
-        $profile->upgrade()->attach($id);
+        $profile->upgrades()->attach($id);
 
         return response()->json([
             'message' => 'The upgrade was successfully bought'
-        ]);
+        ], 201);
     }
 
     public function sell(int $id)
@@ -68,15 +61,13 @@ class UpgradeController extends Controller
             ], 400);
         }
 
-        $car = Upgrade::find($id);
+        $upgrade = Upgrade::find($id);
 
-        $profile->money += $car->price;
+        $profile->money += $upgrade->price;
         $profile->save();
 
-        $profile->cars()->detach($id);
+        $profile->upgrades()->detach($id);
 
-        return response()->json([
-            'message' => 'The upgrade was successfully sold'
-        ]);
+        return response()->json(null, 204);
     }
 }

@@ -37,9 +37,6 @@ class ChatSocket extends BaseSocketListener
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients->attach($conn);
-
-        echo "New connection ! ({$conn->resourceId})\n";
-
     }
 
     /**
@@ -69,8 +66,6 @@ class ChatSocket extends BaseSocketListener
     public function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
-
-        echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
     /**

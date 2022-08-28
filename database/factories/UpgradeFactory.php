@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Bonus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class UpgradeFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+            'price' => $this->faker->numberBetween(1, 10000),
+            'bonus_id' => Bonus::factory()->create()->id
         ];
     }
 }

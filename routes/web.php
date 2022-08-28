@@ -13,36 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/login', 'login')->name('login');
+Route::view('/signup', 'signup');
 
-Route::view('/game', 'game');
+    Route::view('/game', 'game');
 
-Route::get('/login', function () {
-    return view('login');
-});
+    Route::view('/user', 'user');
+    Route::view('/logout', 'logout');
 
-Route::get('/signup', function () {
-    return view('signup');
-});
+    Route::view('/chats', 'chats');
+    Route::view('/chats/{id}', 'chat', ['id']);
 
-Route::get('/user', function () {
-    return view('user');
-});
-
-Route::get('/chats', function () {
-    return view('chats');
-});
-
-Route::get('/chat/{id}', function ($id) {
-    return view('chat', ['id' => $id]);
-});
-
-Route::get('/clan/{id}', function (int $id) {
-    return view('clan', compact('id'));
-});
-
-Route::get('/logout', function () {
-    return view('logout');
-});
+    Route::get('/clans/{id}', function (int $id) {
+        return view('clan', compact('id'));
+    });

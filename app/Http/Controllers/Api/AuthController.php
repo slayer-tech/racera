@@ -13,15 +13,11 @@ class AuthController extends Controller
 {
     public function signup(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'login' => 'required|string|unique:users',
-            'email' => 'required|string|unique:users',
-            'password' => 'required|string|confirmed'
+        $request->validate([
+            'login' => 'unique:users,login|required|string',
+            'email' => 'unique:users,email|required|string',
+            'password' => 'required|string'
         ]);
-
-        if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 400);
-        }
 
         $user = User::create([
             'login' => $request->login,
@@ -44,19 +40,17 @@ class AuthController extends Controller
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;
 
-        return response()->json($token);
+        return response()->json([
+            'token' => $token
+        ], 201);
     }
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'login' => 'required|string',
             'password' => 'required|string'
         ]);
-
-        if ($validator->failed()) {
-            return response()->json(['errors' => $validator->errors()->all()], 400);
-        }
 
         $login = $request->login;
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'login';
@@ -67,20 +61,22 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'errors' => [
-                    'Incorrect password or email'
+                    'Incorrect password or ' . $field
                 ]
-            ], 400);
+            ], 422);
         }
 
         $token = Auth::user()->createToken(config('app.name'))->plainTextToken;
 
-        return response()->json($token);
+        return response()->json([
+            'token' => $token
+        ]);
     }
 
     public function logout(Request $request)
     {
         $request->user()->tokens->each(function ($token, $key) {
-            $token->revoke();
+            $token->delete();
         });
 
         return response()->json([

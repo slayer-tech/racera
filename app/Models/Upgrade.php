@@ -9,13 +9,15 @@ class Upgrade extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function bonuses()
     {
-        return $this->belongsToMany(Bonus::class);
+        return $this->hasOne(Bonus::class);
     }
 
     public function profiles()
     {
-        return $this->belongsToMany(Profile::class);
+        return $this->belongsToMany(Profile::class, 'upgrade_profile');
     }
 }

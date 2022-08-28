@@ -16,7 +16,9 @@ class Profile extends Model
         'avatar',
         'clan_id',
         'money',
-        'fuel'
+        'fuel',
+        'wins',
+        'loses'
     ];
 
     public function user()
@@ -36,7 +38,7 @@ class Profile extends Model
 
     public function upgrades()
     {
-        return $this->belongsToMany(Upgrade::class);
+        return $this->belongsToMany(Upgrade::class, 'upgrade_profile');
     }
 
     public function chats()
@@ -46,5 +48,9 @@ class Profile extends Model
 
     public function privilege() {
         return $this->belongsTo(Privilege::class);
+    }
+
+    public function games() {
+        return $this->belongsTo(Game::class);
     }
 }

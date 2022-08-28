@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('description');
             $table->integer('price');
             $table->foreignId('bonus_id');
-            $table->timestamps();
         });
     }
 

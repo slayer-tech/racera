@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->integer('percentage');
             $table->foreignId('category_id');
-            $table->timestamps();
         });
     }
 
