@@ -1,4 +1,4 @@
-<h1 style="text-align:center;">RACERA<h1>
+#RACERA
 
 # **1. Цель проекта**
 
